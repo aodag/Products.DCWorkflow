@@ -124,7 +124,7 @@ class Guard(Persistent, Explicit):
         s = props.get('guard_permissions', None)
         if s:
             res = 1
-            p = [ permission.strip() for permission in s.split(';') ]
+            p = [ permission.strip() for permission in s.split(b';') ]
             self.permissions = tuple(p)
         s = props.get('guard_roles', None)
         if s:

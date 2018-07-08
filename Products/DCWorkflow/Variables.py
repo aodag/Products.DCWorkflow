@@ -89,7 +89,7 @@ class VariableDefinition(SimpleItem):
         self.description = str(description)
         self.default_value = str(default_value)
         if default_expr:
-            self.default_expr = Expression(default_expr)
+            self.default_expr = Expression(default_expr.decode('utf-8'))
         else:
             self.default_expr = None
 

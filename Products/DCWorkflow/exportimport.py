@@ -883,7 +883,7 @@ def _extractMatchNode(parent, encoding='utf-8'):
 
         name = _getNodeAttribute(node, 'name', encoding)
         values = _getNodeAttribute(node, 'values', encoding)
-        result[name] = _SEMICOLON_LIST_SPLITTER.split(values)
+        result[name] = [s.encode(encoding) for s in _SEMICOLON_LIST_SPLITTER.split(values.decode(encoding))]
 
     return result
 
@@ -1011,9 +1011,9 @@ def _initDCWorkflowVariables(workflow, variables):
         v = workflow.variables._getOb(id)
 
         guard = v_info['guard']
-        props = {'guard_roles': ';'.join(guard['roles']),
-                 'guard_permissions': ';'.join(guard['permissions']),
-                 'guard_groups': ';'.join(guard['groups']),
+        props = {'guard_roles': b';'.join(guard['roles']),
+                 'guard_permissions': b';'.join(guard['permissions']),
+                 'guard_groups': b';'.join(guard['groups']),
                  'guard_expr': guard['expression']}
 
         default = v_info['default']
@@ -1072,14 +1072,14 @@ def _initDCWorkflowTransitions(workflow, transitions):
             workflow.transitions._setObject(id, t)
         t = workflow.transitions._getOb(id)
 
-        trigger_type = list(TRIGGER_TYPES).index(t_info['trigger'])
+        trigger_type = list(TRIGGER_TYPES).index(t_info['trigger'].decode('utf-8'))
 
         action = t_info['action']
 
         guard = t_info['guard']
-        props = {'guard_roles': ';'.join(guard['roles']),
-                 'guard_permissions': ';'.join(guard['permissions']),
-                 'guard_groups': ';'.join(guard['groups']),
+        props = {'guard_roles': b';'.join(guard['roles']),
+                 'guard_permissions': b';'.join(guard['permissions']),
+                 'guard_groups': b';'.join(guard['groups']),
                  'guard_expr': guard['expression']}
 
         t.setProperties(title=t_info['title'],
@@ -1113,9 +1113,9 @@ def _initDCWorkflowWorklists(workflow, worklists):
         action = w_info['action']
 
         guard = w_info['guard']
-        props = {'guard_roles': ';'.join(guard['roles']),
-                 'guard_permissions': ';'.join(guard['permissions']),
-                 'guard_groups': ';'.join(guard['groups']),
+        props = {'guard_roles': b';'.join(guard['roles']),
+                 'guard_permissions': b';'.join(guard['permissions']),
+                 'guard_groups': b';'.join(guard['groups']),
                  'guard_expr': guard['expression']}
 
         w.setProperties(description=w_info['description'],
@@ -1242,7 +1242,7 @@ def _coalesceTextNodeChildren(node, encoding='utf-8'):
     if encoding is not None:
         joined = joined.encode(encoding)
 
-    return ''.join([ line.lstrip()
+    return b''.join([ line.lstrip()
                      for line in joined.splitlines(True) ]).rstrip()
 
 def _extractDescriptionNode(parent, encoding='utf-8'):
